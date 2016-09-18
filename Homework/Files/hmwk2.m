@@ -1,13 +1,10 @@
 %% Problem 1
-% Ask for a user input
-n = input('input the number of terms to sum: '),
-
 % initialize a variable and a list of zeros
 X = 0;
-pie = zeros(1,n);
+pie = zeros(1,16);
 
-% Sum each term up to n terms, storing each succesive approximation in the pie list
-for k = 0:n
+% Sum each term up to 16 terms, storing each succesive approximation in the pie list
+for k = 0:16
 	X = X + (-1)^k / (2 * k + 1) * ((4 * (1 / 5)^(2 * k + 1) - (1/239)^(2 * k + 1)));
     pie(k+1) = X;
 end
@@ -36,7 +33,22 @@ for k = 1:n
 end
 
 %% Problem 3
+% Declare a, the number we will be taking the square root of
+a = 5;
 
+% declare an initial guess 
+y = [0.5];
+
+% iterate using Newton's method to make an estimate of the square root
+for n = 1:10
+    y = [y,0.5*y(n)*(3-a*y(n)^2)];
+end
+
+% Calculate the square root
+sq = a*y(n);
+
+% Declare the results of the estimate
+fprintf('the square root is approximately %.8f\n',sq)
 
 
 %% Problem 4
@@ -45,12 +57,22 @@ end
 
 %% Problem 5
 
+Ti = 20;
+Ts = -15;
+a = 0.138E-6;
+t = 5.184E6;
+
+T = @(x) erf(x/(2*sqrt(a*t)))*(Ti-Ts) + Ts;
+
+mindepth = fzero(T,10);
+
+fprintf('The minimum depth to bury the pipe is %f meters\n',mindepth);
 
 
 %% Problem 6
 
 % Creating a list to hold all operations to be done, all stored as anonymous functions with A,B,C, and D as the inputs.  All four variables must be used as inputs for each item so the for loop can pass the proper inputs to each list item
-problems = {@(A,B,C,D) 2*A + C, @(A,B,C,D) C - 3*B, @(A,B,C,D) 3*B - 2*D,@(A,B,C,D) A*D, @(A,B,C,D) C*A, @(A,B,C,D) A*C, @(A,B,C,D) B*D, @(A,B,C,D) D*B, @(A,B,C,D) B*C, @(A,B,C,D) C*B, @(A,B,C,D) D*A*B, @(A,B,C,D) 2*D.' + B, @(A,B,C,D) D*D, @(A,B,C,D) A*A, @(A,B,C,D) C.' * D, @(A,B,C,D) B*A.', @(A,B,C,D) -2*A.' + 5*C, @(A,B,C,D) B.' + A*D, @(A,B,C,D) 0.5 * (B + B.'), @(A,B,C,D) 0.5 * (B-B.'), @(A,B,C,D) C*C.',@(A,B,C,D) C.' * C, @(A,B,C,D) (C*C.')^(-1), @(A,B,C,D) (C.' *C)^(-1), @(A,B,C,D) B* (A*D).', @(A,B,C,D) A*D*B.'};
+problemlist = {@(A,B,C,D) 2*A + C, @(A,B,C,D) C - 3*B, @(A,B,C,D) 3*B - 2*D,@(A,B,C,D) A*D, @(A,B,C,D) C*A, @(A,B,C,D) A*C, @(A,B,C,D) B*D, @(A,B,C,D) D*B, @(A,B,C,D) B*C, @(A,B,C,D) C*B, @(A,B,C,D) D*A*B, @(A,B,C,D) 2*D.' + B, @(A,B,C,D) D*D, @(A,B,C,D) A*A, @(A,B,C,D) C.' * D, @(A,B,C,D) B*A.', @(A,B,C,D) -2*A.' + 5*C, @(A,B,C,D) B.' + A*D, @(A,B,C,D) 0.5 * (B + B.'), @(A,B,C,D) 0.5 * (B-B.'), @(A,B,C,D) C*C.',@(A,B,C,D) C.' * C, @(A,B,C,D) (C*C.')^(-1), @(A,B,C,D) (C.'*C)^(-1), @(A,B,C,D) B* (A*D).', @(A,B,C,D) A*D*B.'};
 
 % Generate 4 matrices using random numbers
 A = rand(2,3);
@@ -59,15 +81,16 @@ C = rand(3,2);
 D = rand(3);
 
 % Determine the length of the problem set to be done to iterate over the correct number
-[size,length] = size(problems);
+[rows,length] = size(problemlist);
 
 % Iterate over each item in the list.
 for n = 1:length
     % Try the nth item in the problem set, catching any errors and outputting the reason for the error.  Problem w throws a warning that is not caught by this code, but it does not prevent the code from running.
+    % We know that the results for problem w are innacurate because (C*C.')^-1 * (C*C.') should give us a 3x3 identity matrix and it does not.
     % I could not find a method of catching warnings and errors at the same time and it appears the only way to silence the warning is a user setting.
-    % The second elseif term is to catch problem n if it is entered as A^2 rather than A*A.  A^2 gives an error because A is not a square matrix, while A*A warns about inner dimensions not matching.
+    % The second elseif term is to catch problem n if it is entered as A^2 rather than A*A.  A^2 gives an error because A is not a square matrix, while A*A warns about inner dimensions not matching .
     try
-        problems{n}(A,B,C,D);
+        problemlist{n}(A,B,C,D);
         fprintf('%c complete \n',n+96)
     catch MExc
         if MExc.identifier == 'MATLAB:dimagree'
