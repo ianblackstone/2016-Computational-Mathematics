@@ -36,10 +36,10 @@ end
 % Declare a, the number we will be taking the square root of
 a = 5;
 
-% declare an initial guess 
+% Declare an initial guess 
 y = [0.5];
 
-% iterate using Newton's method to make an estimate of the square root
+% Iterate using Newton's method to make an estimate of the square root
 for n = 1:10
     y = [y,0.5*y(n)*(3-a*y(n)^2)];
 end
@@ -53,19 +53,42 @@ fprintf('the square root is approximately %.8f\n',sq)
 
 %% Problem 4
 
+% Part a
+% Set options for tolerance
+options = optimset('TolX',10^-8);
+
+% Create a function to find the zeros of
+g = @(f) -2*log10(0.0001/(3.7) + 2.51/(3*10^5 * sqrt(f))) -1/sqrt(f);
+
+% Find the zeroes of the function within a range
+fzero(g,[0.001 1],options)
+
+% Part b
+% Set options for tolerance
+options = optimset('TolX',10^-12);
+
+% Create a function to find the zeros of
+f = @(c) -1 + 8*c^2 - 8*c^4 - cos(4*c*sqrt(1-c^2));
+
+% Find the zeroes of the function within a range
+fzero(f,[0 0.5],options)
 
 
 %% Problem 5
 
+% Declare constants
 Ti = 20;
 Ts = -15;
 a = 0.138E-6;
 t = 5.184E6;
 
+% Create a function for temperature
 T = @(x) erf(x/(2*sqrt(a*t)))*(Ti-Ts) + Ts;
 
+% Calculate the minimum depth
 mindepth = fzero(T,10);
 
+% Output the minimum depth
 fprintf('The minimum depth to bury the pipe is %f meters\n',mindepth);
 
 
@@ -91,7 +114,6 @@ for n = 1:length
     % The second elseif term is to catch problem n if it is entered as A^2 rather than A*A.  A^2 gives an error because A is not a square matrix, while A*A warns about inner dimensions not matching .
     try
         problemlist{n}(A,B,C,D);
-        fprintf('%c complete \n',n+96)
     catch MExc
         if MExc.identifier == 'MATLAB:dimagree'
             fprintf('%c cannot be performed, matrix dimensions do not agree \n',n+96)
