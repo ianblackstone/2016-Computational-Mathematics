@@ -77,3 +77,21 @@ A3 = max(max(A))
 % part d
 
 A4 = 
+
+%% Problem 5
+
+% part a
+
+user = memory;
+maxmem = user.MaxPossibleArrayBytes;
+
+nmax = sqrt(maxmem/8)
+
+% part b
+
+A = rand(int16(nmax));
+B = rand(int16(nmax));
+
+tic
+A*B;
+toc
