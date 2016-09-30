@@ -97,9 +97,11 @@ tic
 A*B;
 toc
 
+% Still need to find the number of operations for this and calculate flops
+
 % part c
 
-tpoints = zeros(50);
+tpoints = zeros(50,1);
 
 N = 2;
 Nmaxlog = log10(Nmax);
@@ -112,3 +114,5 @@ for n = 1:numel(Nvec)
 	A\b;
 	tpoints(int16(n)) = toc;
 end
+
+loglog(Nvec,tpoints)
