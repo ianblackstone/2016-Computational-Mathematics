@@ -53,6 +53,7 @@ B = toeplitz([-2,1,0,0,0,0,0,0,0,1])
 
 A = toeplitz([1,0,0,0,0,0,0,0,0],[1:8])
 
+
 r = [1:6:19;-4:-6:-25];
 c = [1:4:13;-3:-4:-17];
 % I don't think this is how he wants it done, but it could still be written in the way he wants I think.
@@ -76,7 +77,7 @@ A3 = max(max(A))
 
 % part d
 
-A4 = 
+A(find(A<0.5)) = 0
 
 %% Problem 5
 
@@ -85,7 +86,7 @@ A4 =
 user = memory;
 maxmem = user.MaxPossibleArrayBytes;
 
-nmax = sqrt(maxmem/8)
+Nmax = sqrt(maxmem/8)
 
 % part b
 
@@ -95,3 +96,19 @@ B = rand(int16(nmax));
 tic
 A*B;
 toc
+
+% part c
+
+tpoints = zeros(50);
+
+N = 2;
+Nmaxlog = log10(Nmax);
+Nvec = logspace(N,Nmaxlog);
+
+for n = 1:numel(Nvec)
+	A = rand(int16(Nvec(n)));
+	b = rand(int16(Nvec(n)),1);
+	tic
+	A\b;
+	tpoints(int16(n)) = toc;
+end
