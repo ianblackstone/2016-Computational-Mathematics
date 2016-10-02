@@ -116,3 +116,13 @@ for n = 1:numel(Nvec)
 end
 
 loglog(Nvec,tpoints)
+
+%% Problem 6
+
+T0 = 293.15
+N = 100
+T = zeros(N,1)
+T(1) = T0
+T(end) = T0
+
+f = @(x,S,p,Cp,B,L,ep) S*(2*p*Cp*B)^(-1) * exp(-((x-L/2)/ep)^2)
