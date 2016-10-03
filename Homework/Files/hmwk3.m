@@ -86,22 +86,28 @@ A(find(A<0.5)) = 0
 user = memory;
 maxmem = user.MaxPossibleArrayBytes;
 
-Nmax = sqrt(maxmem/8)
+%Nmax = sqrt(maxmem/8)
+Nmax = 3000;
 
 % part b
 
-A = rand(int16(nmax));
-B = rand(int16(nmax));
+A = rand(int16(Nmax));
+B = rand(int16(Nmax));
 
 tic
 A*B;
-toc
+t = toc;
 
-% Still need to find the number of operations for this and calculate flops
+Nops = Nmax^2 * (Nmax-1) + Nmax^3;
+Flops = Nops/t;
+Cores = feature('NumCores');
+Hz = Flops/(4*Cores);
+GHz = Hz / 10e9;
+fprintf('This computer operates at %.2f GHz \n',GHz)
 
 % part c
 
-tpoints = zeros(50,1);
+lutimes = zeros(50,1);
 
 N = 2;
 Nmaxlog = log10(Nmax);
@@ -112,10 +118,14 @@ for n = 1:numel(Nvec)
 	b = rand(int16(Nvec(n)),1);
 	tic
 	A\b;
-	tpoints(int16(n)) = toc;
+	lutimes(int16(n)) = toc;
 end
 
-loglog(Nvec,tpoints)
+% Need to find this formula
+Ttimes= 3/2 * Nvec.^3 / Flops;
+
+figure
+loglog(Nvec,lutimes,'o',Nvec,Ttimes,'-')
 
 %% Problem 6
 
