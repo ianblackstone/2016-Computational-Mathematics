@@ -122,7 +122,7 @@ for n = 1:numel(Nvec)
 end
 
 % Need to find this formula
-Ttimes= 3/2 * Nvec.^3 / Flops;
+Ttimes = 3/2 * Nvec.^3 / Flops;
 
 figure
 loglog(Nvec,lutimes,'o',Nvec,Ttimes,'-')
@@ -136,3 +136,47 @@ T(1) = T0
 T(end) = T0
 
 f = @(x,S,p,Cp,B,L,ep) S*(2*p*Cp*B)^(-1) * exp(-((x-L/2)/ep)^2)
+
+%% Problem 7
+
+
+
+%% Problem 8
+
+load('C:\Users\Ian\Documents\GitHub\2016-Computational-Mathematics\Homework\Files\bcsstk38.mat')
+A = Problem.A;
+
+[row1,col1] = size(A);
+
+spar1 = 1 - nnz(A)/(row1*col1);
+
+figure
+title('Sparsity of the matrix A')
+spy(A)
+legend(sprintf('Sparsity %f',spar1))
+
+B = chol(A,'lower');
+
+[row2,col2] = size(B);
+
+spar2 = 1 - nnz(B)/(row2 *col2);
+
+compspar = spar2/spar1;
+
+figure
+title('Fill in of the lower Cholesky decomposition of A')
+spy(B)
+legend(sprintf('Fill in: %f',1 - compspar))
+
+c = symamd(A);
+C = A(c,c);
+
+[row3,col3] = size(C);
+
+spar3 = 1 - nnz(C)/(row3*col3);
+compspar2 = spar3/spar1;
+
+figure
+title('Fill in of the symamd of A')
+spy(C)
+legend(sprintf('Fill in: %f',1 -compspar2))
