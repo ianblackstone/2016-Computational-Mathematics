@@ -33,7 +33,13 @@ B4 = B3 - eye(5)
 
 % part c
 
-C1 = 
+C = repmat([1:5].^2,[5,1]);
+
+C1 = (C - triu(C,1)).' + tril(C,-1)
+
+C2 = C - tril(C,-1) - tril(C.')
+
+C3 = C - tril(C) + tril(C.',-1) - diag(diag(C))
 
 % part d
 d = [1:9].^2
@@ -148,16 +154,21 @@ L = 1;
 f = @(x,S,p,Cp,B,L,ep) S*(2*p*Cp*B)^(-1) * exp(-((x-L/2)/ep)^2)
 
 a = 0
-for num = 0:h:1
-	a = a+1
+for num = 0:h:1-h
+	a = a+1;
 	b(a) = h^2 * f(num,S,p,Cp,B,L,ep);
 end
 
+b(1) = b(1) + T0;
+b(end) = b(end) + T0;
+
 s = ones(N,1);
 
-A = spdiags([-0.5*s 0*s -0.5*s], -1:1,N,N);
+A = spdiags([0.5*s s -0.5*s], -1:1,N,N);
 
-B = A\T
+y = A\b
+
+
 
 %% Problem 7
 
