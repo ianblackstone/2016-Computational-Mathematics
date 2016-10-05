@@ -53,11 +53,12 @@ B = toeplitz([-2,1,0,0,0,0,0,0,0,1])
 
 A = toeplitz([1,0,0,0,0,0,0,0,0],[1:8])
 
+n=7;
 
-r = [1:6:19;-4:-6:-25];
-c = [1:4:13;-3:-4:-17];
-% I don't think this is how he wants it done, but it could still be written in the way he wants I think.
-B = toeplitz(c(1:end-1),r(1:end-1))
+r = [1:3:3*n].*[(-1).^(0:n-1)];
+c = [1:2:2*n].*[(-1).^(0:n-1)];
+
+B = toeplitz(c,r)
 
 %% Problem 4
 
@@ -86,8 +87,7 @@ A(find(A<0.5)) = 0
 user = memory;
 maxmem = user.MaxPossibleArrayBytes;
 
-%Nmax = sqrt(maxmem/8)
-Nmax = 3000;
+Nmax = sqrt(maxmem/8)
 
 % part b
 
@@ -100,8 +100,7 @@ t = toc;
 
 Nops = Nmax^2 * (Nmax-1) + Nmax^3;
 Flops = Nops/t;
-Cores = feature('NumCores');
-Hz = Flops/(4*Cores);
+Hz = Flops/4;
 GHz = Hz / 10e9;
 fprintf('This computer operates at %.2f GHz \n',GHz)
 
@@ -122,24 +121,69 @@ for n = 1:numel(Nvec)
 end
 
 % Need to find this formula
-Ttimes = 3/2 * Nvec.^3 / Flops;
+Ttimes = 2/3 * Nvec.^3 / Flops;
 
 figure
 loglog(Nvec,lutimes,'o',Nvec,Ttimes,'-')
 
 %% Problem 6
 
-T0 = 293.15
-N = 100
-T = zeros(N,1)
-T(1) = T0
-T(end) = T0
+T0 = 293.15;
+N = 200;
+T = zeros(N,1);
+T(1) = T0;
+T(end) = T0;
+
+b = zeros(N,1);
+
+h = 1/N;
+
+S = 10^4;
+p = 10;
+Cp = 200;
+ep = 5*10^2;
+B = 10^-3;
+L = 1;
 
 f = @(x,S,p,Cp,B,L,ep) S*(2*p*Cp*B)^(-1) * exp(-((x-L/2)/ep)^2)
 
+a = 0
+for num = 0:h:1
+	a = a+1
+	b(a) = h^2 * f(num,S,p,Cp,B,L,ep);
+end
+
+s = ones(N,1);
+
+A = spdiags([-0.5*s 0*s -0.5*s], -1:1,N,N);
+
+B = A\T
+
 %% Problem 7
 
+load BSUSurferResults;
 
+[row,col] = size(G);
+
+spar = 1 - nnz(G)/(row * col);
+
+spy(G)
+title(sprintf('%f',spar))
+
+%  The following code was added to the end of pagerank.m to outpout the bottom 10 pages as well as the top 10
+%[~,id] = sort(x,1,'ascend');
+%fprintf('\n#     PageRank     Page\n'); 
+%for j=1:10
+%   fprintf('%02d    %1.2e     %s\n',n - 10 + j,x(id(j)),U{id(j)});
+%end
+
+pagerank(U,G,0.85);
+
+pagerank(U,G,0.95);
+
+% The top rated sites are mostly unchanged between the two weightings with only two sites swapping positions
+% but the bottom ten are almost completely different, with only index.boisestate.edu/feed remaining in the
+% lowest ranked pages in both weightings.
 
 %% Problem 8
 
@@ -150,9 +194,8 @@ A = Problem.A;
 
 spar1 = 1 - nnz(A)/(row1*col1);
 
-figure
-title('Sparsity of the matrix A')
 spy(A)
+title('Sparsity of the matrix A')
 legend(sprintf('Sparsity %f',spar1))
 
 B = chol(A,'lower');
@@ -163,9 +206,8 @@ spar2 = 1 - nnz(B)/(row2 *col2);
 
 compspar = spar2/spar1;
 
-figure
-title('Fill in of the lower Cholesky decomposition of A')
 spy(B)
+title('Fill in of the lower Cholesky decomposition of A')
 legend(sprintf('Fill in: %f',1 - compspar))
 
 c = symamd(A);
@@ -176,7 +218,6 @@ C = A(c,c);
 spar3 = 1 - nnz(C)/(row3*col3);
 compspar2 = spar3/spar1;
 
-figure
-title('Fill in of the symamd of A')
 spy(C)
-legend(sprintf('Fill in: %f',1 -compspar2))
+title('Fill in of the symamd of A')
+legend(sprintf('Fill in: %f',1 - compspar2))
