@@ -30,7 +30,7 @@ x = (I - p*G*D)\(delta*e);
 
 % Print the top 10 URLs in page rank order.
 [~,id] = sort(x,1,'descend');
-fprintf('#     PageRank     Page\n'); 
+fprintf('\n#     PageRank     Page\n'); 
 for j=1:10
    fprintf('%02d    %1.2e     %s\n',j,x(id(j)),U{id(j)});
 end
@@ -38,7 +38,7 @@ end
 [~,id] = sort(x,1,'ascend');
 fprintf('\n#     PageRank     Page\n'); 
 for j=1:10
-   fprintf('%02d    %1.2e     %s\n',n - 10 + j,x(id(j)),U{id(j)});
+   fprintf('%02d    %1.2e     %s\n',n - j+1,x(id(j)),U{id(j)});
 end
 
 end
