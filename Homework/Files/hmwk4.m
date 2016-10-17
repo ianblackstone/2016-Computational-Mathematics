@@ -43,6 +43,66 @@ p2 = polyval(p1,fx);
 %% Problem 3
 % Don't know where to start, skipping for now.
 
+%T = @(x) 1+2 x+2 x^2+(4 x^3)/3+(2 x^4)/3+(4 x^5)/15+(4 x^6)/45+(8 x^7)/315+(2 x^8)/315+(4 x^9)/2835+(4 x^10)/14175+(8 x^11)/155925+(4 x^12)/467775+(8 x^13)/6081075+(8 x^14)/42567525;
+T = [1,2,2,4/3,2/3,4/15,4/45,88/315,2/315,4/2835,4/14175,4/467775,8/6081075,8/42567525];
+
+
+x = linspace(-1,1,201);
+p = polyval(T,x);
+y = exp(2*x);
+
+figure
+err = p./y - 1;
+n1 = norm(err,1);
+n2 = norm(err,2);
+ninf = norm(err,inf);
+table(n1,n2,ninf)
+plot(x,err)
+
+% part b
+
+i = 0:14;
+
+xeq = -1 + 2*i./14;
+xch = -cos(i*pi()./14);
+xle = [-0.987992518020485 -0.394151347077563 0.570972172608539 -0.937273392400706 -0.201194093997435 0.724417731360170 -0.848206583410427 0 0.848206583410427 -0.724417731360170 0.201194093997435 0.937273392400706 -0.570972172608539 0.394151347077563 0.987992518020485];
+
+peq = polyval(T,xeq);
+pch = polyval(T,xch);
+ple = polyval(T,xle);
+yeq = exp(2*xeq);
+ych = exp(2*xch);
+yle = exp(2*xle);
+
+figure
+erreq = peq./yeq - 1;
+n1eq = norm(erreq,1);
+n2eq = norm(erreq,2);
+ninfeq = norm(erreq,inf);
+table(n1eq,n2eq,ninfeq)
+plot(xeq,erreq)
+
+figure
+errch = pch./ych - 1;
+n1ch = norm(errch,1);
+n2ch = norm(errch,2);
+ninfch = norm(errch,inf);
+table(n1ch,n2ch,ninfch)
+plot(xch,errch)
+
+figure
+errle = ple./yle - 1;
+n1le = norm(errle,1);
+n2le = norm(errle,2);
+ninfle = norm(errle,inf);
+table(n1le,n2le,ninfle)
+plot(xle,errle)
+
+% part c
+% need a working parts a and b first.
+
+% part d
+% need to download that software.
 
 %% Problem 4
 
@@ -52,7 +112,7 @@ p2 = polyval(p1,fx);
 x = [-1,0,2,4,5];
 y = [0,0,1,2,2+19/22];
 t = -2:.01:6;
-p = pchip(x,y,t);
+%p = pchip(x,y,t);
 
 plot(x,y,'o',t,p,'-')
 
@@ -61,6 +121,7 @@ plot(x,y,'o',t,p,'-')
 % The format for this is (breaks,coefficients), but I don't know the coefficients for the middle section.
 % I think we get them from part a but I'm not sure I did that right so who knows.
 p2 = mkpp([0,2,4],[0,0;2,0;19/22,2]);
+% make a matrix with [f0,d0,c0,b0;f1,d1,d2,c2,b2;...]
 
 % part c
 
@@ -72,12 +133,14 @@ plot(x2,y2)
 
 % part a
 
+% see lab
+
 load shark;
 plot(x,y,'k.-','MarkerSize',10);
 
 % part b
 
-% this gives an error, the first and last x calue are the same and it complains that the data is not a function because of this.
+% this gives an error, the first and last x value are the same and it complains that the data is not a function because of this.
 t = 0:0.01:1;
 p3 = pchip(x,y,t);
 
