@@ -4,14 +4,22 @@ x = [-1,0,1];
 
 P2 = @(x) 6 .* (x)/(-1) .* (x - 1)/(-1 - 1) + 1 .* (x + 1)/(1).*(x - 1)/(-1) + 2 .* (x + 1)/(1+1).*(x)/(1)
 
-% part b Not working, don't know why.
-% I've tried manually inputting the matrix and generating it with the function and neither works.
+% part b
+% New! Improved! Now even gives correct answers!
 A = vander(x)
 b = [6;1;2];
 
 a = A\b
 
-P2V = @(x) a(1) + a(2)*x + a(3)*x.^2;
+P2V = @(x) a(1)*x.^2 + a(2)*x + a(3);
+
+
+% part c
+X = linspace(-1,1,20);
+
+err = P2V(X) - P2(X);
+
+plot(X,err)
 
 %% Problem 2
 
@@ -29,23 +37,23 @@ u = -cos(pi()*i./m);
 
 b = baryinterp(xj,fx,u);
 
+figure
 plot(xj,fx,'ro',u,b,'b-')
 legend('function','interpolation')
 
 % part b
 
-% Not actually sure how to use these two functions, documentation is a bit confusing.
 p1 = polyfit(xj,fx,n);
 
-p2 = polyval(p1,fx);
+p2 = polyval(p1,u);
 
+figure
+plot(xj,fx,'ro',u,p2,'b-')
+legend('function','interpolation')
 
 %% Problem 3
-% Don't know where to start, skipping for now.
 
-%T = @(x) 1+2 x+2 x^2+(4 x^3)/3+(2 x^4)/3+(4 x^5)/15+(4 x^6)/45+(8 x^7)/315+(2 x^8)/315+(4 x^9)/2835+(4 x^10)/14175+(8 x^11)/155925+(4 x^12)/467775+(8 x^13)/6081075+(8 x^14)/42567525;
 T = [1,2,2,4/3,2/3,4/15,4/45,88/315,2/315,4/2835,4/14175,4/467775,8/6081075,8/42567525];
-
 
 x = linspace(-1,1,201);
 p = polyval(T,x);
@@ -73,6 +81,8 @@ ple = polyval(T,xle);
 yeq = exp(2*xeq);
 ych = exp(2*xch);
 yle = exp(2*xle);
+
+% I can't find what I'm doing wrong but these don't look right.
 
 figure
 erreq = peq./yeq - 1;
@@ -108,25 +118,46 @@ plot(xle,errle)
 
 % part a
 
-% Seems to work, needs to have the plot properly bounded I think.
-x = [-1,0,2,4,5];
-y = [0,0,1,2,2+19/22];
-t = -2:.01:6;
-%p = pchip(x,y,t);
+% Doesn't work
+% x = [-1,0,2,4,5];
+% y = [0,0,1,2,2+19/22];
+% t = -2:.01:6;
+% p = pchip(x,y,t);
 
-plot(x,y,'o',t,p,'-')
+% Still not working.
+x1 = [-1 0];
+y1 = [0 0];
+
+p1 = polyfit(x1,y1,1);
+
+x2 = [0 2];
+y2 = [0 1];
+
+p2 = polyfit(x2,y2,1);
+
+x3 = [2 4];
+y3 = [1 2];
+
+p3 = polyfit(x3,y3,1);
+
+x4 = [4 5];
+y4 = [2 (2+19/22)];
+
+p4 = polyfit(x4,y4,1);
+
+p = [p1;p2;p3;p4];
 
 % part b
 
 % The format for this is (breaks,coefficients), but I don't know the coefficients for the middle section.
 % I think we get them from part a but I'm not sure I did that right so who knows.
-p2 = mkpp([0,2,4],[0,0;2,0;19/22,2]);
+P = mkpp([0,2,4],p);
 % make a matrix with [f0,d0,c0,b0;f1,d1,d2,c2,b2;...]
 
 % part c
 
 x2 = linspace(-1,5);
-y2 = ppval(x2,p2);
+y2 = ppval(x2,P);
 plot(x2,y2)
 
 %% Problem 5
