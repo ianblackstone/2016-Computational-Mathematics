@@ -59,11 +59,11 @@ x = linspace(-1,1,201);
 p = polyval(T,x);
 y = exp(2*x);
 
-figure
-err = p./y - 1;
+err = p - y;
 n1 = norm(err,1);
 n2 = norm(err,2);
 ninf = norm(err,inf);
+figure('name','Taylor expansion')
 table(n1,n2,ninf)
 plot(x,err)
 
@@ -75,33 +75,37 @@ xeq = -1 + 2*i./14;
 xch = -cos(i*pi()./14);
 xle = [-0.987992518020485 -0.394151347077563 0.570972172608539 -0.937273392400706 -0.201194093997435 0.724417731360170 -0.848206583410427 0 0.848206583410427 -0.724417731360170 0.201194093997435 0.937273392400706 -0.570972172608539 0.394151347077563 0.987992518020485];
 
-peq = polyval(T,xeq);
-pch = polyval(T,xch);
-ple = polyval(T,xle);
+Teq = polyfit(xeq,exp(2*xeq),14)
+Tch = polyfit(xch,exp(2*xch),14)
+Tle = polyfit(xle,exp(2*xle),14)
+
+peq = polyval(Teq,xeq);
+pch = polyval(Tch,xch);
+ple = polyval(Tle,xle);
 yeq = exp(2*xeq);
 ych = exp(2*xch);
 yle = exp(2*xle);
 
 % I can't find what I'm doing wrong but these don't look right.
 
-figure
-erreq = peq./yeq - 1;
+figure('name','equally spaced points')
+erreq = peq - yeq;
 n1eq = norm(erreq,1);
 n2eq = norm(erreq,2);
 ninfeq = norm(erreq,inf);
 table(n1eq,n2eq,ninfeq)
 plot(xeq,erreq)
 
-figure
-errch = pch./ych - 1;
+figure('name','Chebyshev points')
+errch = pch - ych;
 n1ch = norm(errch,1);
 n2ch = norm(errch,2);
 ninfch = norm(errch,inf);
 table(n1ch,n2ch,ninfch)
 plot(xch,errch)
 
-figure
-errle = ple./yle - 1;
+figure('name','Legendre points')
+errle = ple - yle;
 n1le = norm(errle,1);
 n2le = norm(errle,2);
 ninfle = norm(errle,inf);
@@ -109,10 +113,12 @@ table(n1le,n2le,ninfle)
 plot(xle,errle)
 
 % part c
-% need a working parts a and b first.
+% The chebyshev points produce the smallest error of all the points.
 
 % part d
-% need to download that software.
+f = chebfun('exp(2*x)');
+r = remez(f,14);
+
 
 %% Problem 4
 
@@ -124,28 +130,32 @@ plot(xle,errle)
 % t = -2:.01:6;
 % p = pchip(x,y,t);
 
-% Still not working.
-x1 = [-1 0];
-y1 = [0 0];
+% % Still not working.
+% x1 = [-1 0];
+% y1 = [0 0];
 
-p1 = polyfit(x1,y1,1);
+% p1 = polyfit(x1,y1,1);
 
-x2 = [0 2];
-y2 = [0 1];
+% x2 = [0 2];
+% y2 = [0 1];
 
-p2 = polyfit(x2,y2,1);
+% p2 = polyfit(x2,y2,1);
 
-x3 = [2 4];
-y3 = [1 2];
+% x3 = [2 4];
+% y3 = [1 2];
 
-p3 = polyfit(x3,y3,1);
+% p3 = polyfit(x3,y3,1);
 
-x4 = [4 5];
-y4 = [2 (2+19/22)];
+% x4 = [4 5];
+% y4 = [2 (2+19/22)];
 
-p4 = polyfit(x4,y4,1);
+% p4 = polyfit(x4,y4,1);
 
-p = [p1;p2;p3;p4];
+% p = [p1;p2;p3;p4];
+
+% section 3.6, not 3.3!
+p1 = 0;
+p2 = 
 
 % part b
 
