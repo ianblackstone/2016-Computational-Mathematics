@@ -153,15 +153,22 @@ r = remez(f,14);
 
 % p = [p1;p2;p3;p4];
 
-% section 3.6, not 3.3!
-p1 = 0;
-p2 = 
+d = [0,0,19/22,19/22,0,0];
+c = @(kn,k,kp) 3*k -2*kn - kp;
+b = @(kn,k,kp) kn - 2*k + kp;
+
+g1 = [0, d(2), c(d(1),d(2),d(3)), b(d(1),d(2),d(3))];
+g2 = [0, d(3), c(d(2),d(3),d(4))/2, b(d(2),d(3),d(4))/4];
+g3 = [1, d(4), c(d(3),d(4),d(5))/2, b(d(3),d(4),d(5))/4];
+g4 = [2, d(5), c(d(4),d(5),d(6)), b(d(4),d(5),d(6))];
+
+g = [g1;g2;g3;g4];
 
 % part b
 
 % The format for this is (breaks,coefficients), but I don't know the coefficients for the middle section.
 % I think we get them from part a but I'm not sure I did that right so who knows.
-P = mkpp([0,2,4],p);
+P = mkpp([0,2,4],g);
 % make a matrix with [f0,d0,c0,b0;f1,d1,d2,c2,b2;...]
 
 % part c
