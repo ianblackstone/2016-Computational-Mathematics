@@ -166,25 +166,47 @@ r = remez(f,14);
 
 % g = [g1;g2;g3;g4];
 
+
+% Declare x and y points
 y = [0,0,1,2,2];
 x = [-1,0,2,4,5];
+
+% declare the values of d, c, and b for each interval
+d = [0, 0 , 0, 19/22 , 0];
+c = [0 , 0 , (1.5-19/22)/2 , (1.5-19/11)/2 , 0];
+b = [0 , 0.5 , (-1+19/22)/4 , (19/22-1)/4 , 0];
+
+% create a matrix of each value
+g = [y(1:5)' d' c' b'];
+
+% create a piecewise function
+P = mkpp(x,g);
+
+% Evaluate the piecewise function from -1 to 5 and plot it
+x2 = linspace(-1,5);
+y2 = ppval(x2,P);
+plot(x2,y2)
+
+% These results are not correct, I do not understand how the mkpp function is working to create these results.
 
 % d = zeros(4,1);
 % c = zeros(4,1);
 % b = zeros(4,1);
 
-% for i = 1:4
-% 	d(i) = (y(i+1) - y(i))/(x(i+1)-x(i));
-% end
+% % for i = 1:4
+% % 	d(i) = (y(i+1) - y(i))/(x(i+1)-x(i));
+% % end
 
-% for i = 1:3
-% 	c(i) = ( d(i) - d(i+1) )/( x(i+1) - x(i) );
-% 	b(i) = ( -d(i) + d(i+1) )/( x(i+1) - x(i) )^2;
-% end
+% d = [0 19/22 19/22 0];
 
-d = [0 0.5 0.5 0];
-c = [-0.5 0.5 0.25 0];
-b = [0.5 -0.5/4 -0.25 0.5]
+ for i = 1:3
+ 	c(i) = ( d(i) - d(i+1) )/( x(i+1) - x(i) );
+ 	b(i) = ( -d(i) + d(i+1) )/( x(i+1) - x(i) )^2;
+ end
+
+
+% c = [-0.5 0.5 0.25 0];
+% b = [0.5 -0.5/4 -0.25 0.5]
 
 g = [y(2:5)' d' c' b']
 
@@ -193,7 +215,7 @@ g = [y(2:5)' d' c' b']
 
 % The format for this is (breaks,coefficients), but I don't know the coefficients for the middle section.
 % I think we get them from part a but I'm not sure I did that right so who knows.
-P = mkpp([0,2,4],g);
+P = mkpp([-1,0,2,4],g);
 % make a matrix with [f0,d0,c0,b0;f1,d1,d2,c2,b2;...]
 
 % part c
