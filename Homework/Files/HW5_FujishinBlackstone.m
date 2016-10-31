@@ -32,10 +32,10 @@ y1 = ydata';
 % PART A
 t1 = ones(length(tdata),1); %W e create a new vector to be our t for the y=Bt 
 % by creating a column of ones...
-tnew =[t1 , tdata']; % ...and then setting it so that we have a column of 
+tnew = [t1 , tdata']; % ...and then setting it so that we have a column of 
 % ones next to a column made of tdata
 B = tnew\y1; % To solve for our coefficients we use the backslash operator
-y2 =B(1)+(B(2).*tdata); % And plug it into our equation setting the new equation
+y2 = B(1)+(B(2).*tdata); % And plug it into our equation setting the new equation
 plot(tdata,ydata,'bo',tdata,y2,'r-');% We plot our data points and our given line
 title('Fitting Oscillatory Data')
 ylabel('y values')
@@ -97,9 +97,11 @@ load longley.dat
 y = longley(:,1);
 X = longley(:,2:7);
 X1 = [ones(length(X),1),X];
+
 % PART A 
 % Use backslash operator to compute our Bs
 B = X1\y;
+
 % PART B
 % Compare our Bs with the known Bs
 % I will do this by calculating the errors:
@@ -109,6 +111,7 @@ plot(0:6,error','ro')
 legend('Percent Errors of B versus Known B')
 xlabel('Corresponds to B(j) where j=0:6')
 ylabel('((KnownB-B)./KnownB)*100')
+
 % PART C
 % Use errorbar to plot y with error bars whose magnitude is the difference
 % between y and the least squares fit
@@ -118,7 +121,7 @@ title('Error between y and least squares fit')
 
 %PART D
 % Use corrcoef to compute the correlation coefficients for X without the 
-% column of 1’s. Which variables are highly correlated?
+% column of 1â€™s. Which variables are highly correlated?
 coefs = corrcoef(X);
 highcorr = coefs - triu(coefs) > 0.7
 % From highcorr we can see the spots of the variables that are highly
@@ -189,7 +192,7 @@ for j = 1:s
     Cerrorspercent(j) = abs((c(j)-cnew(j))/c(j))*100
 end
 CoefficientList= {'coeff1','coeff2','coeff3','coeff4','coeff5'};
-T=table(Cerrorspercent,'RowNames',CoefficientList)
+T = table(Cerrorspercent,'RowNames',CoefficientList)
 % From the table we see that some of Coefficients are pretty close but
 % others are quite off
 end
@@ -231,7 +234,7 @@ end
 % Calculate final output
 x = (h/3)*(f(a) + 2*q + 4*p + f(b));
 
-% Use Matlab’s symbolic tool box to obtain exact answers to I(f1) (and
+% Use Matlabâ€™s symbolic tool box to obtain exact answers to I(f1) (and
 % I(f2))
 syms x
 f1 = @(x) (-1+x)^2*exp(-(x^2));
@@ -250,7 +253,7 @@ errorbar(M,ERROR)
 title('Error between Matlabs symbolic integration and Simpsons Method (shown by magnitudes of bars)')
 
 % PART C
-% Using your Simpson’s rule method from part (a), compute an approximation to I(f1) and
+% Using your Simpsonâ€™s rule method from part (a), compute an approximation to I(f1) and
 % I(f2) for n = 4, 8, 16, 32, 64, 128.
 % I could do a for loop on all these but I want to see how it all plays out:
 Ns = {'f1 n=4';'f2 n=4';'f1 n=8';'f2 n=8';'f1 n=16';'f2 n=16';'f1 n=32';'f2 n=32';'f1 n=64';'f2 n=64';'f1 n=128';'f2 n=128'};
