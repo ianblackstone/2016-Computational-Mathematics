@@ -201,7 +201,28 @@ end
 %% Problem #4 :
 function prob4()
 
+% Load the data 
+load('PeriodicData.mat')
+
+% Make an initial guess for w1, w2, a1, and a2
+wa0 = [3,7,1,1];
+
+% Create a function to determine a1, a2, w1, and w1 by minimizing the difference
+% between our function and the data.
+err = @(wa) sum((y - (wa(3)*sin(wa(1)*t) + wa(4)*sin(wa(2)*t))).^2);
+
+%  Determine the values of w and a that minimize our error
+[wa,fminres1] = fminsearch(err,wa0);
+
+% Create a data set for our interpolation function.
+ydata = wa(3)*sin(wa(1)*t) + wa(4)*sin(wa(2)*t);
+
+% plot the data
+figure
+plot(t,y,'*',t,ydata,'b-')
+
 end
+
 %% Problem #5 : Simpson's Rule
 function prob5()
 % PART A
