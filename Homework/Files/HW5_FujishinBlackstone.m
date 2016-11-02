@@ -30,19 +30,21 @@ y1 = ydata';
 % our coeffiencts Beta(1) and Beta(2) to fit the linear equation y= Beta(1)+Beta(2)*t
 
 % PART A
-t1 = ones(length(tdata),1); %W e create a new vector to be our t for the y=Bt 
+t1 = ones(length(tdata),1); % We create a new vector to be our t for the y=Bt 
 % by creating a column of ones...
-tnew = [t1 , tdata']; % ...and then setting it so that we have a column of 
+tnew = [t1 , tdata']; %...and then setting it so that we have a column of 
 % ones next to a column made of tdata
 B = tnew\y1; % To solve for our coefficients we use the backslash operator
 y2 = B(1)+(B(2).*tdata); % And plug it into our equation setting the new equation
+figure
 plot(tdata,ydata,'bo',tdata,y2,'r-');% We plot our data points and our given line
 title('Fitting Oscillatory Data')
 ylabel('y values')
 xlabel('t data')
 legend('Original Data','Fit Line')
 
-% Need to plot residuals 
+% Need to plot residuals
+figure
 plot(tdata,ydata-y2,'r*')
 title('Residuals')
 
@@ -58,21 +60,24 @@ tnew = [t1 , tdata2'];
 B = tnew\y1;
 y2new = B(1)+(B(2).*tdata2);
 % We plot the residuals again and note the differences:
+figure
 plot(tdata2,ydata2,'bo',tdata2,y2new,'r-');%We plot our data points and our given line without outlier
 title('Fitting Oscillatory Data Excluding Outliers')
 ylabel('y values')
 xlabel('t data')
 legend('Original Data- Without Outlier','Fit Line')
 % Need to plot residuals 
+figure
 plot(tdata2,ydata2-y2new,'r*')
 title('Residuals Excluding Outlier')
 
-%PART C
+% PART C
 % We fit the data, excluding the outlier, to
 % y(t)=Beta(1)+Beta(2)t+Beta(3)sin(t)
 tnow = [ones(length(tdata2),1), tdata2', sin(tdata2')]; %We make our new matrix without the outlier for t
 B = tnow\y1;
 y3 = B(1)+(B(2).*tnow)+(B(3).*sin(tnow));
+figure
 plot(tdata2,ydata2,'bo',tnow,y3,'r-');%We plot our data points and our given line without outlier
 title('Fitting Oscillatory Data Excluding Outliers')
 ylabel('y values')
@@ -87,6 +92,7 @@ yy = B(1)+(B(2).*tt)+(B(3).*sin(tt));
 % The question says to plot the third fit on a finer grid, but it doesn't
 % say whether or not to include the outliner, only to mark it so that is
 % what I have done:
+figure
 plot(tdata(7),ydata(7),'b*',tdata2,ydata2,'o',tt,yy,'-')
 legend('outlier','data excluding outlier','best fit line without outlier')
 end
@@ -97,47 +103,47 @@ load longley.dat
 y = longley(:,1);
 X = longley(:,2:7);
 X1 = [ones(length(X),1),X];
-
 % PART A 
 % Use backslash operator to compute our Bs
 B = X1\y;
-
 % PART B
 % Compare our Bs with the known Bs
 % I will do this by calculating the errors:
 KnownB = [-3482258.63459582; 15.0618722713733; -0.358191792925910e-01; -2.02022980381683;  -1.03322686717359;-0.511041056535807e-01; 1829.15146461355];
 error = ((KnownB-B)./KnownB)*100;
+figure
 plot(0:6,error','ro')
 legend('Percent Errors of B versus Known B')
 xlabel('Corresponds to B(j) where j=0:6')
 ylabel('((KnownB-B)./KnownB)*100')
-
 % PART C
 % Use errorbar to plot y with error bars whose magnitude is the difference
 % between y and the least squares fit
 lsf = X1*B;
+figure
 errorbar(y,y-lsf)
 title('Error between y and least squares fit')
 
-%PART D
+% PART D
 % Use corrcoef to compute the correlation coefficients for X without the 
-% column of 1â€™s. Which variables are highly correlated?
+% column of 1’s. Which variables are highly correlated?
 coefs = corrcoef(X);
 highcorr = coefs - triu(coefs) > 0.7
-% From highcorr we can see the spots of the variables that are highly
-% correlated.
+%From highcorr we can see the spots of the variables that are highly
+%correlated.
 
 
 %PART E
-% Normalize the vector y so that its mean is zero and its standard deviation
-% is one.
+%Normalize the vector y so that its mean is zero and its standard deviation
+%is one.
 y = y - mean(y(:));
 y = y/std(y(:));
-% Do the same thing to the columns of X. Now plot all seven normalized
-% variables on the same axis. Include a legend.
+%Do the same thing to the columns of X. Now plot all seven normalized
+%variables on the same axis. Include a legend.
 X = X - mean(X(:));
 X = X/std(X(:));
-n=linspace(-10,10,16);
+n = linspace(-10,10,16);
+figure
 plot(n,y,'r*',n,X(:,1),'bo',n,X(:,2),'go',n,X(:,3),'b+',n,X(:,4),'co',n,X(:,5),'kd',n,X(:,6),'k*')
 title('Normalized Variables..Problem 5.11 NCM')
 ylabel('Variables from columns of y and X')
@@ -156,15 +162,14 @@ y = [0.39 .32 .27 .22 .18 .15 .13 .12 .13 .15]';
 % solving a 10-by-5 overdetermined system of linear equations for the other
 % five coefficients. Plot the orbit with x on the x-axis and y on the y-axis.
 % Superimpose the ten data points on the plot.
-M = [(x.^2), (x.*y) (y.*y) x y]
+M = [(x.^2), (x.*y) (y.*y) x y];
 t = ones(10,1)*-1;
 c = M\t;
-[X,Y] = meshgrid(x,y);
-% [X,Y] = meshgrid(min(x):0.1:max(x),min(y):0.1:max(y));
-Z = c(1)*X.^2 + c(2)*X.*Y + c(3)*Y.^2 + c(4).*X + c(5).*Y+1;
+figure
 plot(x,y,'b-',x,y,'r*')
 title('Planetary Orbit of given x,y data')
 legend('line of orbit','observed points')
+
 
 %PART B
 % (b) This least squares problem is nearly rank deficient. To see what effect this
@@ -178,23 +183,19 @@ ynew = y+((rand)-(0.5));
 Mnew = [(xnew.^2), (xnew.*ynew) (ynew.*ynew) xnew ynew];
 tnew = ones(10,1)*-1;
 cnew = Mnew\tnew;
-[Xnew,Ynew] = meshgrid(xnew,ynew);
-Znew = cnew(1)*Xnew.^2 + cnew(2).*Xnew.*Ynew + cnew(3).*Ynew.^2 + cnew(4).*Xnew + cnew(5).*Ynew+1;
-% I think I need to do Meshgrid again but it isn't working for the first one
-% so I am just going to consult the all-powerful Ian..
+figure
 plot(xnew,ynew,'k-',xnew,ynew,'g*',x,y,'b-',x,y,'r*')
 title('Planetary Orbit NCM 5.12')
 legend('Line of Orbit with Pertubations','Pertubated points','Line of Orbit without Pertubations','Observed points')
 % I would like to compare the coefficients:
-s = 5;
-Cerrorspercent= zeros(5,1);
-for j = 1:s
-    Cerrorspercent(j) = abs((c(j)-cnew(j))/c(j))*100
+Cerrorspercent = zeros(5,1);
+for j = 1:5
+    Cerrorspercent(j) = abs((c(j)-cnew(j))/c(j))*100;
 end
-CoefficientList= {'coeff1','coeff2','coeff3','coeff4','coeff5'};
+CoefficientList = {'coeff1','coeff2','coeff3','coeff4','coeff5'};
 T = table(Cerrorspercent,'RowNames',CoefficientList)
-% From the table we see that some of Coefficients are pretty close but
-% others are quite off
+% From the table we see that some of Coefficients are within a magnitude and
+% some others are very far off
 end
 
 
@@ -222,40 +223,10 @@ figure
 plot(t,y,'*',t,ydata,'b-')
 
 end
-
 %% Problem #5 : Simpson's Rule
 function prob5()
 % PART A
-
-function x = simps(a,b,n,f)
-% The function implements the composite Simpson's rule
-
-h = (b-a)/n;
-x = zeros(1,n+1);
-x(1) = a;
-x(n+1) = b;
-p = 0;
-q = 0;
-
-% Define the x-vector
-for i = 2:n
-    x(i) = a + (i-1)*h;
-end
-
-% Define the terms to be multiplied by 4
-for i = 2:((n+1)/2)
-    p = p + (f(x(2*i -2)));
-end
-
-% Define the terms to be multiplied by 2
-for i = 2:((n-1)/2)
-    q = q + (f(x(2*i -1)));
-end
-
-% Calculate final output
-x = (h/3)*(f(a) + 2*q + 4*p + f(b));
-
-% Use Matlabâ€™s symbolic tool box to obtain exact answers to I(f1) (and
+% Use Matlab’s symbolic tool box to obtain exact answers to I(f1) (and
 % I(f2))
 syms x
 f1 = @(x) (-1+x)^2*exp(-(x^2));
@@ -263,82 +234,62 @@ f2 = @(x) 2*(1/(1+x^2));
 I1a = int(f1,x,-1,1);
 I2a = int(f2,x,-1,1);
 
-%PART B
+% PART B
 % Write Matlab Function for approximating a general integral. 
 I1b = simps(-1,1,100,f1); %I am just using 100 here for n as a general value
 I2b = simps(-1,1,100,f2);
 % Let us see how they compare, for funsies:
 M = [I1a;I2a];
 ERROR = [(I1a-I1b); (I2a-I2b)];
+figure
 errorbar(M,ERROR)
 title('Error between Matlabs symbolic integration and Simpsons Method (shown by magnitudes of bars)')
 
 % PART C
-% Using your Simpsonâ€™s rule method from part (a), compute an approximation to I(f1) and
+% Using your Simpson’s rule method from part (a), compute an approximation to I(f1) and
 % I(f2) for n = 4, 8, 16, 32, 64, 128.
 % I could do a for loop on all these but I want to see how it all plays out:
-Ns = {'f1 n=4';'f2 n=4';'f1 n=8';'f2 n=8';'f1 n=16';'f2 n=16';'f1 n=32';'f2 n=32';'f1 n=64';'f2 n=64';'f1 n=128';'f2 n=128'};
-% For n=4
-I1b4 = simps(-1,1,4,f1);
-I2b4 = simps(-1,1,4,f1);
-% For n=8
-I1b8 = simps(-1,1,8,f1);
-I2b8 = simps(-1,1,8,f1);
-% For n=16
-I1b16 = simps(-1,1,16,f1);
-I2b16 = simps(-1,1,16,f1);
-% For n=32
-I1b32 = simps(-1,1,32,f1);
-I2b32 = simps(-1,1,32,f1);
-% For n=64
-I1b64 = simps(-1,1,64,f1);
-I2b64 = simps(-1,1,64,f1);
-% For n=128
-I1b128 = simps(-1,1,128,f1);
-I2b128 = simps(-1,1,128,f1);
+Ns = {'f1 n=4';'f1 n=8';'f1 n=16';'f1 n=32';'f2 n=64';'f2 n=128'};
+n = [4 8 16 32 64 128];
+I1b = ones(6,1);
+I2b = ones(6,1);
+% Let's make a loop to calculate each integration:
+for j = 1:length(n)
+    I1b(j) = simps(-1,1,n(j),f1);
+    I2b(j) = simps(-1,1,n(j),f2);
+end
 
 % Report the magnitude of the error in these approximations for each n in a nice table.
-% For n=4
-error4a = I1a-I1b4;
-error4b = I2a-I2b4;
-% For n=8
-error8a = I1a-I1b8;
-error8b = I2a-I2b8;
-% For n=16
-error16a = I1a-I1b16;
-error16b = I2a-I2b16;
-% For n=32
-error32a = I1a-I1b32;
-error32b = I2a-I2b32;
-% For n=64
-error64a = I1a-I1b64;
-error64b = I2a-I2b64;
-% For n=128
-error128a = I1a-I1b128;
-error128b = I2a-I2b128;
+I1berror = ones(length(n),1);
+I2berror = ones(length(n),1);
+for j = 1:length(n)
+    I1berror(j) = I1a-I1b(j);
+    I2berror(j) = I2a-I2b(j);
+end
 
-errors = [error4a, error4b, error8a,error8b,error16a,error16b,error32a,error32b,error64a,error64b,error128a,error128b]';
-% Having a hard time forcing the symbolic errors to approximate to 5 decimal
-% places, so I did it by hand and put it back in:
-errors =[ 0.45914 1.72814 0.04418 1.31318 0.00417 1.27317 0.00044 1.26944 0.00005 1.26905 0.00001 1.26901]';
-T = table(errors,'RowNames',Ns)
+% Table of errors
+T = table(I1berror,I2berror,'RowNames',Ns)
 
-% Produce a plot of the magnitude of the error vs. 1/n (on a log-log scale).
-
+%Produce a plot of the magnitude of the error vs. 1/n (on a log-log scale).
 n = [4 8 16 32 64 128];
-n = 1./n;
-errorf1 = [error4a,error8a,error16a,error32a,error64a,error128a];
-errorf2 = [error4b,error8b,error16b,error32b,error64b,error128b];
-loglog(errorf1, n,'ro',errorf2,n,'bo')
+nnew = 1./n;
+figure
+loglog(nnew,I1berror,'ro',nnew,I2berror,'bo')
 legend('For Function 1','For Function 2')
 title('Plot Magnitude of Error versus 1/n')
 
-% For the I(f1) verify that the error is decreasing like O(1/n4).
-% Need to do, however, unsure what O(1/n4) is, will ask in class.
+% For the I(f1) verify that the error is decreasing like O(1/n^4).
+x = linspace(4,128,6);
+y = 1./(x.^4);
+figure
+plot(n,I1berror,'bo',x,y,'r-')
+% It looks as if I(f1) decreases like O(1/n^4)(Matlab says the
+% equation to model this behavior would be f(n)=49.57*n^(-3.377) using the
+% curve fitting tool)
 
-% Does this rate of decrease in the error appear to be true for I(f2)? 
-%
+% Does this rate of decrease in the error appear to be true fo   r I(f2)? 
+% It does not seem to decrease like I(f1).
 % What rate does the error appear to decrease for this integral?
-%
-
+% So I used the Matlab toolbox to fit a line to our I(f2) errors and it said
+% the equation best fit would be f(n)=10.35*n^(-1.288) so I(f2) decreases like O(1/n) 
 end
