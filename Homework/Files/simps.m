@@ -25,3 +25,5 @@ end
 
 % Calculate final output
 x = (h/3)*(f(a) + 2*q + 4*p + f(b));
+
+end

@@ -20,7 +20,7 @@ end
 fprintf('\n');
 end
 
-%% Problem #1 :Oscillatory Data Fitting NCM 5.8
+%% Problem #1 : Oscillatory Data Fitting NCM 5.8
 function prob1()
 % In the problem we were given the data:
 tdata = [1:25];
@@ -41,12 +41,14 @@ plot(tdata,ydata,'bo',tdata,y2,'r-');% We plot our data points and our given lin
 title('Fitting Oscillatory Data')
 ylabel('y values')
 xlabel('t data')
-legend('Original Data','Fit Line')
+legend('Original Data','Fit Line','Location','northwest')
 
 % Need to plot residuals
 figure
 plot(tdata,ydata-y2,'r*')
 title('Residuals')
+ylabel('residual')
+xlabel('t')
 
 % PART B
 % We discard the outlier by hand, note changes to some variables:
@@ -59,17 +61,21 @@ t1 = ones(length(tdata2),1);
 tnew = [t1 , tdata2'];
 B = tnew\y1;
 y2new = B(1)+(B(2).*tdata2);
+
 % We plot the residuals again and note the differences:
 figure
 plot(tdata2,ydata2,'bo',tdata2,y2new,'r-');%We plot our data points and our given line without outlier
 title('Fitting Oscillatory Data Excluding Outliers')
 ylabel('y values')
 xlabel('t data')
-legend('Original Data- Without Outlier','Fit Line')
+legend('Original Data- Without Outlier','Fit Line','Location','northwest')
+
 % Need to plot residuals 
 figure
 plot(tdata2,ydata2-y2new,'r*')
 title('Residuals Excluding Outlier')
+ylabel('residual')
+xlabel('t')
 
 % PART C
 % We fit the data, excluding the outlier, to
@@ -82,7 +88,7 @@ plot(tdata2,ydata2,'bo',tnow,y3,'r-');%We plot our data points and our given lin
 title('Fitting Oscillatory Data Excluding Outliers')
 ylabel('y values')
 xlabel('t data')
-legend('Original Data- Without Outlier','Fit Line')
+legend('Original Data- Without Outlier','Fit Line','Location','southeast')
 
 % PART D
 % We evaluate our equation above over [0,26], including the outlier marked
@@ -94,7 +100,10 @@ yy = B(1)+(B(2).*tt)+(B(3).*sin(tt));
 % what I have done:
 figure
 plot(tdata(7),ydata(7),'b*',tdata2,ydata2,'o',tt,yy,'-')
-legend('outlier','data excluding outlier','best fit line without outlier')
+title('Best fit line for the data with outliers highlighted')
+ylabel('y')
+xlabel('t')
+legend('outlier','data excluding outlier','best fit line without outlier','Location','southeast')
 end
 
 %% Problem #2 : Longley Data Set NCM 5.11
@@ -113,7 +122,7 @@ KnownB = [-3482258.63459582; 15.0618722713733; -0.358191792925910e-01; -2.020229
 error = ((KnownB-B)./KnownB)*100;
 figure
 plot(0:6,error','ro')
-legend('Percent Errors of B versus Known B')
+title('Percent Errors of B versus Known B')
 xlabel('Corresponds to B(j) where j=0:6')
 ylabel('((KnownB-B)./KnownB)*100')
 % PART C
@@ -123,23 +132,24 @@ lsf = X1*B;
 figure
 errorbar(y,y-lsf)
 title('Error between y and least squares fit')
+ylabel('error')
+xlabel('y')
 
 % PART D
 % Use corrcoef to compute the correlation coefficients for X without the 
 % column of 1’s. Which variables are highly correlated?
 coefs = corrcoef(X);
 highcorr = coefs - triu(coefs) > 0.7
-%From highcorr we can see the spots of the variables that are highly
-%correlated.
+% From highcorr we can see the spots of the variables that are highly
+% correlated.
 
-
-%PART E
-%Normalize the vector y so that its mean is zero and its standard deviation
-%is one.
+% PART E
+% Normalize the vector y so that its mean is zero and its standard deviation
+% is one.
 y = y - mean(y(:));
 y = y/std(y(:));
-%Do the same thing to the columns of X. Now plot all seven normalized
-%variables on the same axis. Include a legend.
+% Do the same thing to the columns of X. Now plot all seven normalized
+% variables on the same axis. Include a legend.
 X = X - mean(X(:));
 X = X/std(X(:));
 n = linspace(-10,10,16);
@@ -148,7 +158,7 @@ plot(n,y,'r*',n,X(:,1),'bo',n,X(:,2),'go',n,X(:,3),'b+',n,X(:,4),'co',n,X(:,5),'
 title('Normalized Variables..Problem 5.11 NCM')
 ylabel('Variables from columns of y and X')
 xlabel('n=linspace(-5,5,16)')
-legend('y','X(:,1)','X(:,2)','X(:,3)','X(:,4)','X(:,5)','X(:,6)')
+legend('y','X(:,1)','X(:,2)','X(:,3)','X(:,4)','X(:,5)','X(:,6)','Location','northwest')
 end
 
 %% Problem #3 : Fitting Planetary Orbits NCM 5.12
@@ -168,7 +178,9 @@ c = M\t;
 figure
 plot(x,y,'b-',x,y,'r*')
 title('Planetary Orbit of given x,y data')
-legend('line of orbit','observed points')
+legend('line of orbit','observed points','Location','northwest')
+ylabel('y')
+xlabel('x')
 
 
 %PART B
@@ -186,9 +198,13 @@ cnew = Mnew\tnew;
 figure
 plot(xnew,ynew,'k-',xnew,ynew,'g*',x,y,'b-',x,y,'r*')
 title('Planetary Orbit NCM 5.12')
-legend('Line of Orbit with Pertubations','Pertubated points','Line of Orbit without Pertubations','Observed points')
+legend('Line of Orbit with Pertubations','Pertubated points','Line of Orbit without Pertubations','Observed points','Location','northwest')
+ylabel('y')
+xlabel('x')
+
 % I would like to compare the coefficients:
 Cerrorspercent = zeros(5,1);
+
 for j = 1:5
     Cerrorspercent(j) = abs((c(j)-cnew(j))/c(j))*100;
 end
@@ -199,35 +215,99 @@ T = table(Cerrorspercent,'RowNames',CoefficientList)
 end
 
 
-%% Problem #4 :
+%% Problem #4 : Periodic Fit
 function prob4()
 
-% Load the data 
-load('PeriodicData.mat')
+% These functions are saved as external files then called.
+% function sinfit
 
-% Make an initial guess for w1, w2, a1, and a2
-wa0 = [3,7,1,1];
+% % Load the data.
+% load('PeriodicData.mat')
 
-% Create a function to determine a1, a2, w1, and w1 by minimizing the difference
-% between our function and the data.
-err = @(wa) sum((y - (wa(3)*sin(wa(1)*t) + wa(4)*sin(wa(2)*t))).^2);
+% % Draw a figure.
+% clf
+% shg
+% set(gcf,'doublebuffer','on')
+% h = plot(t,y,'o',t,0*t,'-');
+% h(3) = title('');
+% ylabel('y')
+% xlabel('t')
+% legend('y','fit')
 
-%  Determine the values of w and a that minimize our error
-[wa,fminres1] = fminsearch(err,wa0);
+% % Declare initial guess for omega.
+% w0 = [3 7]';
 
-% Create a data set for our interpolation function.
-ydata = wa(3)*sin(wa(1)*t) + wa(4)*sin(wa(2)*t);
+% % Find new values for omega and amplitude by minimizing the residual residual.
+% w = fminsearch(@findvar,w0,[],t,y,h);
 
-% plot the data
-figure
-plot(t,y,'*',t,ydata,'b-')
+% % Draw the final function.
+% set(h(2),'color','black')
+% end
+
+% function res = findvar(w,t,y,h)
+% % Make an array of zeros.
+% m = length(t);
+% n = length(w);
+% X = zeros(m,n);
+
+% % fill the array with the values of sin(w1t) and sin(w2t).
+% for j = 1:n
+% X(:,j) = sin(w(j)*t);
+% end
+
+% % Solve the linear equations to find the amplitude of each wave function.
+% a = X\y;
+% z = X*a;
+
+% % find the residual.
+% res = norm(z-y);
+
+% % plot the function as it evolves.
+% set(h(2),'ydata',z);
+% set(h(3),'string',sprintf('a1: %.3f  a2: %.3f  w1: %.3f   w2: %.3f',a,w))
+% pause(.1)
+% end
+
+sinfit()
 
 end
+
 %% Problem #5 : Simpson's Rule
 function prob5()
+
+% The following function is called from an outside file.
+% function x = simps(a,b,n,f)
+% % The function implements the composite Simpson's rule
+
+% h = (b-a)/n;
+% x = zeros(1,n+1);
+% x(1) = a;
+% x(n+1) = b;
+% p = 0;
+% q = 0;
+
+% % Define the x-vector
+% for i = 2:n
+%     x(i) = a + (i-1)*h;
+% end
+
+% % Define the terms to be multiplied by 4
+% for i = 2:((n+1)/2)
+%     p = p + (f(x(2*i -2)));
+% end
+
+% % Define the terms to be multiplied by 2
+% for i = 2:((n-1)/2)
+%     q = q + (f(x(2*i -1)));
+% end
+
+% Calculate final output
+% x = (h/3)*(f(a) + 2*q + 4*p + f(b));
+% end
+
 % PART A
-% Use Matlab’s symbolic tool box to obtain exact answers to I(f1) (and
-% I(f2))
+% Use Matlab’s symbolic tool box to obtain exact answers to I(f1) (and I(f2))
+
 syms x
 f1 = @(x) (-1+x)^2*exp(-(x^2));
 f2 = @(x) 2*(1/(1+x^2));
@@ -243,7 +323,9 @@ M = [I1a;I2a];
 ERROR = [(I1a-I1b); (I2a-I2b)];
 figure
 errorbar(M,ERROR)
-title('Error between Matlabs symbolic integration and Simpsons Method (shown by magnitudes of bars)')
+title('Magnitude of error between symbolic integration and Simpsons Method')
+ylabel('error magnitude')
+xlabel('M')
 
 % PART C
 % Using your Simpson’s rule method from part (a), compute an approximation to I(f1) and
@@ -253,6 +335,7 @@ Ns = {'f1 n=4';'f1 n=8';'f1 n=16';'f1 n=32';'f2 n=64';'f2 n=128'};
 n = [4 8 16 32 64 128];
 I1b = ones(6,1);
 I2b = ones(6,1);
+
 % Let's make a loop to calculate each integration:
 for j = 1:length(n)
     I1b(j) = simps(-1,1,n(j),f1);
@@ -275,19 +358,28 @@ n = [4 8 16 32 64 128];
 nnew = 1./n;
 figure
 loglog(nnew,I1berror,'ro',nnew,I2berror,'bo')
-legend('For Function 1','For Function 2')
+legend('For Function 1','For Function 2','location','northwest')
 title('Plot Magnitude of Error versus 1/n')
+ylabel('error')
+xlabel('n')
 
 % For the I(f1) verify that the error is decreasing like O(1/n^4).
 x = linspace(4,128,6);
 y = 1./(x.^4);
+
 figure
 plot(n,I1berror,'bo',x,y,'r-')
+title('Error of I(f1) over n')
+xlabel('n')
+ylabel('error')
+legend('error','1/x^4')
+axis([0 128 -0.05 0.5])
+
 % It looks as if I(f1) decreases like O(1/n^4)(Matlab says the
 % equation to model this behavior would be f(n)=49.57*n^(-3.377) using the
 % curve fitting tool)
 
-% Does this rate of decrease in the error appear to be true fo   r I(f2)? 
+% Does this rate of decrease in the error appear to be true for I(f2)? 
 % It does not seem to decrease like I(f1).
 % What rate does the error appear to decrease for this integral?
 % So I used the Matlab toolbox to fit a line to our I(f2) errors and it said
