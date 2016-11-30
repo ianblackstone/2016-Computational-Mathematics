@@ -65,20 +65,20 @@ y2 = y1 - l2*cos(theta2);
 % eom2 = m2*l1*theta1''*cos(theta1-theta2) + m2*l2*theta2'' =
 % -g*m2*sin(theta2) + m2*l1*(theta1')^2 * sin(theta1 - theta2)
 
-l1 = 2;
-l2 = 1;
-m1 = 1;
-m2 = 2;
-g = -9.81;
-c = cos(theta1-theta2);
-s = sin(theta1-theta2);
+% l1 = 2;
+% l2 = 1;
+% m1 = 1;
+% m2 = 2;
+% g = -9.81;
+% c = cos(theta1-theta2);
+% s = sin(theta1-theta2);
 
-% this is the same storage method used in RK4
-u = [u1 ; u2 ; u3; u4];
-u1 = theta1;
-u2 = theta2;
-u3 = theta1';
-u4 = theta2';
+% % this is the same storage method used in RK4
+% u = [u1 ; u2 ; u3; u4];
+% u1 = theta1;
+% u2 = theta2;
+% u3 = theta1';
+% u4 = theta2';
 
 % in matrix vector form:
 % [ 1 0 0 0 ; 0 1 0 0 ; 0 0 (m1+m2)*l1 m2*l2*c ; 0 0 m2*l1*c m2*l2 ] *
