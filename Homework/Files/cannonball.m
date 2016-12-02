@@ -1,4 +1,4 @@
-function f = cannonball(t,u)
+function f = cannonball(t,u,w)
 
 g = 9.81;
 m = 15;
@@ -7,6 +7,6 @@ p = 1.29;
 s = 0.25;
 w = 0;
 
-f = [ u(3); u(4); -c*p*s/(2*m)*(u(3)-w)^2; -c*p*s/(2*m)*u(4)-g*u(2)/u(1)];
+f = [ u(3); u(4); -c*p*s/(2*m)*(u(3)-w)^2; -c*p*s/(2*m)*u(4)^2-g];
 
 end
