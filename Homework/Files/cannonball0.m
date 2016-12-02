@@ -1,4 +1,4 @@
-function f = cannonballneg10(t,u)
+function f = cannonball0(t,u)
 
 % Declare constants.
 g = 9.81;
@@ -8,6 +8,6 @@ p = 1.29;
 s = 0.25;
 
 % Return the derivative of the vector u.
-f = [u(3);u(4); -c*p*s/(2*m)*(u(3)-(-10))^2; -c*p*s/(2*m)*(u(4))^2-g];
+f = [u(3);u(4); -c*p*s/(2*m)*u(3)^2; -c*p*s/(2*m)*(u(4))^2-g];
 
 end
