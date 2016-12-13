@@ -53,17 +53,21 @@ for p = 1:8
 	 Ak = U(:,1:k(p))*S(1:k(p),1:k(p))*V(:,1:k(p))';
 	 Ak = min(1,max(0,Ak));
 	 Ak = reshape(Ak,[m,n,3]);
-	 figure('Name',sprintf('Compression: %.f',100*CR(p)))
-     title('compressed image')
-	 imagesc(Ak), axis image, colormap(jet), drawnow
+	 figure()
+	 imagesc(Ak), axis image, colormap(jet),title(sprintf('Compression: %.2f',CR(p))), drawnow
 end
 
 % Part c
 
+E = diag(S);
+
 % Display the singular values
 figure()
-semilogy(diag(S),'-')
+semilogy(1:length(E),E','-',k(1),E(k(1)),'rx',k(2),E(k(2)),'gx',k(3),E(k(3)),'bx',k(4),E(k(4)),'mx',k(5),E(k(5)),'ro',k(6),E(k(6)),'go',k(7),E(k(7)),'bo',k(8),E(k(8)),'mo')
+legend('Singular values','0.01 compression','0.05 compression','0.1 compression','0.2 compression','0.3 compression','0.4 compression','0.5 compression','0.75 compression','location','southwest')
 title('Singular values and compression ratios')
+xlabel('Number of values')
+ylabel('Singular value')
 
 end
 
@@ -95,7 +99,7 @@ correct = zeros(1,40);
 
 % Attempt to predict each image using an increasing number of basis vectors.
 for k = 1:40
-	for test = 1:10  %length(testImages)
+	for test = 1:length(testImages)
 		B = double(testImages{test});
 		[m,n] = size(B);
 		% Flatten B into a vector b
@@ -123,7 +127,7 @@ for k = 1:40
 end
 
 figure()
-plot(1:40,correct/10)
+plot(1:40,correct/length(testImages))
 title('Prediction accuracy by number of basis vectors used')
 ylabel('Prediction accuracy')
 xlabel('Number of basis vectors used')
